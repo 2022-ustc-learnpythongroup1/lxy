@@ -4,7 +4,7 @@ import queue
 import time
 import random
 import core.status  as status
-
+from core import cloud
 from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QPixmap, QIcon, QPainter
 from PyQt5.QtWidgets import QWidget, QMenu, QApplication, QSystemTrayIcon, QAction, QMainWindow
@@ -97,7 +97,8 @@ class DesktopPet(QMainWindow):
             if self.curAction.Move_able:
                 self.move(event.globalPos() - self.mDragPosition)
             if not self.curAction.acceptMove:
-                queueA.put(actions.drag())#调用中断
+                pass
+                # queueA.put(actions.drag())#调用中断
 
 
         """鼠标移动事件"""
@@ -160,6 +161,8 @@ class DesktopPet(QMainWindow):
         self.timer.timeout.connect(self.action)
         self.timer.start(self.TIME_INTERVAL)
 
+
+
     #处理一下动作队列
     def dealWithTheQueue(self):
         try:
@@ -181,13 +184,17 @@ class DesktopPet(QMainWindow):
         except BaseException as e:
             # print("end",e)
             pass
+        if(status.selected==False and self.curAction.actionName!="hide" and status.flag):
+            q.put(actions.hide())
+            status.flag=False
 
 
 
     def action(self):
         """加载动作"""
+        cloud.cli.start()
         self.timer.stop()
-
+        
         self.dealWithTheQueue()
         # self.curAction.finished=True
         #取优先级最高的元素
@@ -199,8 +206,14 @@ class DesktopPet(QMainWindow):
             t=q.get()
             print("t.priority",t.priority)
             # print("t here",t)
-            if(t.actionName=="hide"):
-                print("aaaaaha")
+            if((not status.selected) ):
+                print("a")
+            #     print("------------------------------------end-----------------------")
+            #     while(not q.empty()):
+            #         tt=q.get()
+            #         print(tt.actionName,"         ",tt.priority)
+            #     exit(0) 
+            print("aaaaaha",q.qsize())
             if(t.IsInterrupt and self.curAction.Interupt_able):
                 self.curAction.actionInterrupted()
                 self.curAction=t
@@ -215,7 +228,7 @@ class DesktopPet(QMainWindow):
                 self.curAction=q.get()
                 self.curAction.init(self)
         # print("TIME_INTERVAL",self.TIME_INTERVAL)
-        print(self.curAction.actionName,"!!!!!!!!",status.selected.value)
+        print(self.curAction.actionName,"!!!!!!!!",status.selected)
         self.timer.start(self.TIME_INTERVAL)
 
 

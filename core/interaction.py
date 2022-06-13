@@ -10,7 +10,7 @@ from core import status
 
 # from core.cloud import connected as WEB_CONNECTED
 # from core.cloud import chosen as WEB_CHOSEN
-cloudcli = Process(target=cli.start, args=())
+
 
 
 
@@ -20,7 +20,7 @@ def info(title):
     print('parent process:', os.getppid())
     print('process id:', os.getpid())
 
-def ff(qI):
+def Qadd(qI):
     queueA.put(qI)
     print("queue size####################################################",queueA.qsize())
 
@@ -28,61 +28,44 @@ def ff(qI):
 
 
 def start_processes():
-    print("start processes")
-    cloudcli.daemon=True
-    cloudcli.start()
+    cli.start()
+    # print("start processes")
+    # cloudcli = Process(target=cli.start, args=())
+    # cloudcli.daemon=True
+    # cloudcli.start()
     pass
     
 def randomAct():
     t=random.randint(0, 8)
     # # t=0
-    if(status.selected.value):
-        if t==1:
-            # print("StTTTTands")
-            p = Process(target=ff, args=(actions.stand(),))
-            p.daemon=True
-            p.start()
-        if t==2:
-            p = Process(target=ff, args=(actions.boring(),))
-            p.daemon=True
-            p.start()
-        if t==3:
-            p = Process(target=ff, args=(actions.lie(),))
-            p.daemon=True
-            p.start()
-        if t==4:
-            p = Process(target=ff, args=(actions.pull(),))
-            p.daemon=True
-            p.start()
-        if t==5:
-            p = Process(target=ff, args=(actions.run(),))
-            p.daemon=True
-            p.start()
-        if t==6:
-            p = Process(target=ff, args=(actions.sing(),))
-            p.daemon=True
-            p.start()
-        if t==7:
-            p = Process(target=ff, args=(actions.board(),))
-            p.daemon=True
-            p.start()
-        if t==8:
-            p = Process(target=ff, args=(actions.walkl(),))
-            p.daemon=True
-            p.start()
-        if t==9:
-            p = Process(target=ff, args=(actions.walkr(),))
-            p.daemon=True
-            p.start()
+    if(status.selected):
+        # if t>1:
+        Qadd(actions.walkl())
+        # if t==1:
+        #     # print("StTTTTands")
+        #     Qadd(actions.stand())
+        # if t==2:
+        #     Qadd(actions.boring())
+        # if t==3:
+        #     Qadd(actions.lie())
+        # if t==4:
+        #     Qadd(actions.pull())
+        # if t==5:
+        #     Qadd(actions.run())
+        # if t==6:
+        #     Qadd(actions.sing())
+        # if t==7:
+        #     Qadd(actions.board())
+        # if t==8:
+            # Qadd(actions.walkl())
+        # if t==9:
+        #     Qadd(actions.walkr())
         # if t>=10:
-        #     p = Process(target=ff, args=(actions.hide(),))
-        #     p.daemon=True
-        #     p.start()        
+        #     Qadd(actions.hide())   
         print("randomAct")
     else:
-        p = Process(target=ff, args=(actions.hide(),))
-        p.daemon=True
-        p.start()            
+        Qadd(actions.hide())
+
 
 
 

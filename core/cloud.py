@@ -9,26 +9,28 @@ sio = socketio.Client()
 
 
 def mydisconnected():
-    if(status.connected.value==1):
-        status.connected.value=0
-        status.selected.value=1
+    if(status.connected):
+        status.connected=False 
+        status.selected=True
         
 
 def myconnected():
-    if(status.connected.value==0):
-        status.connected.value=1
+    if(not status.connected):
+        status.connected=True
         print("connected")
         # queueA.put(actions.hide())
 
 def myselected():
     print("selected")
-    status.selected.value=1
+    status.flag=True
+    status.selected=True
 
 def myreleased():
     print("release")
-    if(status.selected.value==1):
-        queueA.put(actions.hide())
-    status.selected.value=0
+    # if(not status.selected):
+        # queueA.put(actions.hide())
+    status.flag=True
+    status.selected=False
 
 
 
@@ -51,8 +53,6 @@ class client():
             myselected()
         elif (data['selected']=='0'):
             myreleased()
-        else:
-            print("maintain")
             
 
 
@@ -70,15 +70,20 @@ class client():
 
   
     def start(self):
-        while True:
+        if(not sio.connected):
             try:
                 sio.connect('http://localhost:5000')
-                while sio.connected:
-                    a=input()
-                    sio.emit('client', {'data': str(a)})
             except BaseException as e:
-                mydisconnected()
-            time.sleep(5)
+                mydisconnected()   
+        # while True:
+        #     try:
+        #         sio.connect('http://localhost:5000')
+        #         while sio.connected:
+        #             a=input()
+        #             sio.emit('client', {'data': str(a)})
+        #     except BaseException as e:
+        #         mydisconnected()
+        #     time.sleep(5)
 
 
 

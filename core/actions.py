@@ -68,7 +68,7 @@ class ActionItem():
     T_INTERVAL=500#刷新率
 
     def __lt__(self, other):
-        return self.priority < other.priority
+        return self.priority > other.priority
 
     def __init__(self,T_INTERVAL=500,actionName="",):
         self.TIME_INTERVAL=T_INTERVAL
@@ -150,7 +150,7 @@ class drag(ActionItem):
             elif 0 < self.father.moveDistance <= 1:
                 self.father.setPix(str(self.imgDir / settings.MOUSE_TO_LEFT_1))
             elif 1 < self.father.moveDistance <= 2:
-                self.father.self.father.setPix(str(self.imgDir / settings.MOUSE_TO_LEFT_2))
+                self.father.setPix(str(self.imgDir / settings.MOUSE_TO_LEFT_2))
             elif 2 < self.father.moveDistance:
                 self.father.setPix(str(self.imgDir / settings.MOUSE_TO_LEFT_3))
         
@@ -240,6 +240,7 @@ class walkr(ActionItem):
     def Clicked(self,bt=None):
         # print("stop!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         self.finishedAct()
+
 
     def nextAct(self):
         """走路"""
@@ -368,7 +369,7 @@ class hide(ActionItem):
     
     def nextAct(self):
         print("hidehide")
-        if(status.selected.value==1):
+        if(status.selected):
             self.finishedAct()
         self.father.setPix(self.ACTList[0])
         # else:
