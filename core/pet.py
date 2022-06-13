@@ -3,6 +3,7 @@ from core.act_queue import q as queueA
 import queue
 import time
 import random
+import core.status  as status
 
 from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QPixmap, QIcon, QPainter
@@ -110,7 +111,8 @@ class DesktopPet(QMainWindow):
         if self.curAction.acceptDoubleClick:
             self.curAction.doubleClicked()
         else:
-            queueA.put(actions.walk())
+            queueA.put(actions.walkl())
+            #TODO
 
 
     def closeEvent(self, QCloseEvent):
@@ -195,7 +197,10 @@ class DesktopPet(QMainWindow):
             time.sleep(0.1)
         else:
             t=q.get()
+            print("t.priority",t.priority)
             # print("t here",t)
+            if(t.actionName=="hide"):
+                print("aaaaaha")
             if(t.IsInterrupt and self.curAction.Interupt_able):
                 self.curAction.actionInterrupted()
                 self.curAction=t
@@ -209,7 +214,8 @@ class DesktopPet(QMainWindow):
             if(self.curAction.finished):
                 self.curAction=q.get()
                 self.curAction.init(self)
-        print("TIME_INTERVAL",self.TIME_INTERVAL)
+        # print("TIME_INTERVAL",self.TIME_INTERVAL)
+        print(self.curAction.actionName,"!!!!!!!!",status.selected.value)
         self.timer.start(self.TIME_INTERVAL)
 
 

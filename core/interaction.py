@@ -7,8 +7,10 @@ from core import actions
 from core.act_queue import q as queueA
 from core.cloud import cli
 from core import status
+
 # from core.cloud import connected as WEB_CONNECTED
 # from core.cloud import chosen as WEB_CHOSEN
+cloudcli = Process(target=cli.start, args=())
 
 
 
@@ -27,15 +29,14 @@ def ff(qI):
 
 def start_processes():
     print("start processes")
-    p = Process(target=cli.start, args=())
-    p.daemon=True
-    p.start()
+    cloudcli.daemon=True
+    cloudcli.start()
     pass
     
 def randomAct():
     t=random.randint(0, 8)
     # # t=0
-    if(status.selected):
+    if(status.selected.value):
         if t==1:
             # print("StTTTTands")
             p = Process(target=ff, args=(actions.stand(),))

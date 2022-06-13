@@ -2,50 +2,41 @@
 import socketio
 import time
 from core.act_queue import q as queueA
-# from act_queue import q as queueA
 from core import actions
 from core import status
-
-
-
-
-
 
 sio = socketio.Client()
 
 
-
 def mydisconnected():
-    if(status.connected):
-        status.connected=False
-        print("disconnected")
+    if(status.connected.value==1):
+        status.connected.value=0
+        status.selected.value=1
         
 
 def myconnected():
-    if(not status.connected):
-        status.connected=True
+    if(status.connected.value==0):
+        status.connected.value=1
         print("connected")
         # queueA.put(actions.hide())
 
 def myselected():
-    print("!!!!!selected")
-    status.selected=True
+    print("selected")
+    status.selected.value=1
+
 def myreleased():
-    print("!!!!!release")
-    status.selected=False
-    queueA.put(actions.hide())
+    print("release")
+    if(status.selected.value==1):
+        queueA.put(actions.hide())
+    status.selected.value=0
 
 
 
 class client():
 
-    # , engineio_logger=True logger=True)
-
     @sio.event
     def connect():
-        # print('connection established')
         sio.emit('client', {'data': 'connection established'})
-        # status.connected=True
         myconnected()
 
     @sio.on('server')
@@ -55,16 +46,14 @@ class client():
 
     @sio.on('response')
     def on_message(data):
-        # global selected
-        # print('Client get response:',data['data'])
         print('Client get response:',data)
-        print((data['selected']))
-        if(data['selected']=='1' and (not status.selected)):
+        if(data['selected']=='1'):
             myselected()
-        elif (data['selected']=='0' and (status.selected)):
+        elif (data['selected']=='0'):
             myreleased()
         else:
             print("maintain")
+            
 
 
 
@@ -74,17 +63,12 @@ class client():
         sio.emit('client', {'response': 'my response'})
         
 
-    # @sio.event
-    # def connect_error():
-    #     print("The connection failed!")
-    #     sio.disconnect()
 
     @sio.event
     def disconnect():
         mydisconnected()
-        # sio.disconnect()
-    # sio.re
-    
+
+  
     def start(self):
         while True:
             try:
@@ -92,19 +76,12 @@ class client():
                 while sio.connected:
                     a=input()
                     sio.emit('client', {'data': str(a)})
-                # sio.wait()
             except BaseException as e:
                 mydisconnected()
-                pass
             time.sleep(5)
-    # while 1:
-    #     # sio.
 
-    # sio.wait()
 
 
 cli=client()
-
-
 if __name__ == '__main__':
     cli.start()

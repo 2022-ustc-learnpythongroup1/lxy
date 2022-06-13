@@ -1,5 +1,3 @@
-
-connected=True
-selected=False
-
-#Maybe a lock is needed,but I'm too lazy
+from multiprocessing import Value
+selected=Value('i',1)
+connected=Value('i',0)

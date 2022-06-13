@@ -1,7 +1,7 @@
 from core.ability import Ability
 from core.conf import settings
-from core import actionList
-from core import status
+from core import actionList 
+import core.status as status
 # from PyQt5.QtGui import QPixmap, QIcon, QPainter
 import time
 
@@ -85,9 +85,9 @@ class ActionItem():
 
     def init(self, Father):
         self.father=Father
-        print("self.TIME_INTERVAL",self.TIME_INTERVAL)
+        # print("self.TIME_INTERVAL",self.TIME_INTERVAL)
         self.father.TIME_INTERVAL=self.TIME_INTERVAL
-        print("fahter.TIME_INTERVAL",self.father.TIME_INTERVAL)
+        # print("fahter.TIME_INTERVAL",self.father.TIME_INTERVAL)
         self.finished=False
         #TODO: 可以在这儿缓存一下图片
 
@@ -116,7 +116,7 @@ class ActionItem():
         #寻找当前帧
         i=self.curTime
         k=0
-        print("        self.curtime",self.curTime,"ACTTime.size",self.ACTTime.__len__(),)
+        # print("        self.curtime",self.curTime,"ACTTime.size",self.ACTTime.__len__(),)
         while(i>0):
            i-=self.ACTTime[k]
            k+=1
@@ -139,7 +139,7 @@ class drag(ActionItem):
     def nextAct(self):
         print(self.father)
         if (self.father.draging==False):
-            finished=True
+            self.finishedAct()
         else:
             if -1 <= self.father.moveDistance < 0:
                 self.father.setPix(str(self.imgDir / settings.MOUSE_TO_RIGHT_1))
@@ -150,7 +150,7 @@ class drag(ActionItem):
             elif 0 < self.father.moveDistance <= 1:
                 self.father.setPix(str(self.imgDir / settings.MOUSE_TO_LEFT_1))
             elif 1 < self.father.moveDistance <= 2:
-                self.father.self.father.msetPix(str(self.imgDir / settings.MOUSE_TO_LEFT_2))
+                self.father.self.father.setPix(str(self.imgDir / settings.MOUSE_TO_LEFT_2))
             elif 2 < self.father.moveDistance:
                 self.father.setPix(str(self.imgDir / settings.MOUSE_TO_LEFT_3))
         
@@ -327,7 +327,8 @@ class run(ActionItem):
         self.acceptClick=True
         self.Interupt_able=True
 
-    def Clicked(self,bt=None):
+    def Clicked(self,bt
+    =None):
         self.finishedAct()
 
 class boring(ActionItem):
@@ -366,6 +367,9 @@ class hide(ActionItem):
         self.priority=10000
     
     def nextAct(self):
-        if(status.selected):
+        print("hidehide")
+        if(status.selected.value==1):
             self.finishedAct()
-            self.father.setPix(self.ACTList[0])
+        self.father.setPix(self.ACTList[0])
+        # else:
+            # self.finishedAct()
